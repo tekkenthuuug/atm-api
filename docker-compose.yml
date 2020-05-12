@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  # Backend API
+  atm-backend-api:
+    container_name: atm-backend
+    build: ./
+    command: bash -c "yarn migrate && yarn seed && yarn dev"
+    working_dir: /usr/src/atm-backend
+    ports:
+      - '8000:3000'
+    volumes:
+      - ./:/usr/src/atm-backend
+    env_file:
+      - ./private/dbSecret.env
+  # Postgres
+  postgres:
+    container_name: postgres-db-atm
+    image: postgres:12.2
+    ports:
+      - '5431:5432'
+    env_file:
+      - ./private/dbSecret.env
