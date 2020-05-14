@@ -1,10 +1,11 @@
+const jwt = require("jsonwebtoken");
 const CreditCard = require("../models/CreditCard.model");
 const router = require("express").Router();
 
 const verifyCard = (req, res) => {
   const { cardNo, pin } = req.body;
   if (!cardNo || !pin) {
-    res.sendStatus(400);
+    return res.sendStatus(400);
   }
 
   CreditCard.query()
@@ -18,12 +19,24 @@ const verifyCard = (req, res) => {
       creditCard
         .verifyAll(pin)
         .then(() => {
-          // @togo genereate token
           const { accountNo } = creditCard;
-          res.status(200).send({ token: "token", accountNo });
+          jwt.sign(
+            { accountNo },
+            "secret",
+            { expiresIn: "15m" },
+            (err, token) => {
+              if (!err && token) {
+                return res.status(200).send({ token: token });
+              } else {
+                res
+                  .status(400)
+                  .send({ error: "An error occured. Try again later" });
+              }
+            }
+          );
         })
         .catch((err) => {
-          res.status(400).send({ error: err });
+          res.status(200).send({ error: err });
         });
     });
 };

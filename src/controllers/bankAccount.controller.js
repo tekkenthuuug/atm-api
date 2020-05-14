@@ -1,13 +1,16 @@
+const requireAuth = require("../../middleware/authorization");
 const BankAccount = require("../models/BankAccount.model");
 const router = require("express").Router();
 
 const checkBalance = (req, res) => {
-  const { accountNo } = req.params;
-
+  /* 
+    accountNo property of res.locals was set
+    by authentification middleware
+  */
+  const { accountNo } = res.locals;
   if (!accountNo) {
     res.satus(400).send({ error: "accountNo is missing" });
   }
-
   BankAccount.query()
     .where({ accountNo })
     .first()
@@ -15,11 +18,10 @@ const checkBalance = (req, res) => {
       res.status(200).send({ accountNo, balance: account.getBalance() });
     });
 };
-
-router.get("/balance/check/:accountNo", checkBalance);
+router.get("/balance/check", requireAuth, checkBalance);
 
 const withdrawMoney = (req, res) => {
-  const { accountNo } = req.params;
+  const { accountNo } = res.locals;
 
   const { amount } = req.body;
   BankAccount.query()
@@ -44,10 +46,10 @@ const withdrawMoney = (req, res) => {
     });
 };
 
-router.put("/balance/withdraw/:accountNo", withdrawMoney);
+router.put("/balance/withdraw", requireAuth, withdrawMoney);
 
 const depositMoney = (req, res) => {
-  const { accountNo } = req.params;
+  const { accountNo } = res.locals;
 
   const { amount } = req.body;
   BankAccount.query()
@@ -68,7 +70,7 @@ const depositMoney = (req, res) => {
     });
 };
 
-router.put("/balance/deposit/:accountNo", depositMoney);
+router.put("/balance/deposit", requireAuth, depositMoney);
 
 const patchAccount = (account) => {
   return BankAccount.query()
