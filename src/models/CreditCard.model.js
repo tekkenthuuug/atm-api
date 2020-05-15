@@ -26,14 +26,14 @@ class CreditCard extends Model {
 
   isPinValid(pin) {
     const isValid = bcrypt.compareSync(pin, this.hash_pin);
-    let hasDroppedFailureScore = false;
+    let hasChangedScore = false;
 
     if (isValid && this.failure_score !== 0) {
       this.failure_score = 0;
-      hasDroppedFailureScore = true;
+      hasChangedScore = true;
     }
 
-    return { isValid, hasDroppedFailureScore };
+    return { isValid, hasChangedScore };
   }
 
   hasExpired() {
@@ -41,7 +41,13 @@ class CreditCard extends Model {
   }
 
   isBlocked() {
-    return this.is_blocked;
+    if (this.is_blocked) {
+      return {
+        isBlocked: true,
+        blockedDate: this.blocked_date,
+      };
+    }
+    return { isBlocked: false };
   }
 
   /**
@@ -51,12 +57,12 @@ class CreditCard extends Model {
     if (this.failure_score < 2) {
       // Increase failure score and set new last_failure date
       this.failure_score += 1;
-      this.last_failure = new Date();
       return false;
     } else {
       // Increase failure and block card
       this.failure_score = 3;
       this.is_blocked = true;
+      this.blocked_date = new Date();
       return true;
     }
   }

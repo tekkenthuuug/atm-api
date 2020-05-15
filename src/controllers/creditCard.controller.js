@@ -20,44 +20,39 @@ const verifyCard = (req, res) => {
         return res.status(200).send({ error: 'Card has expired' });
       }
 
-      if (creditCard.isBlocked()) {
-        return res
-          .status(200)
-          .send({ error: 'Card is blocked. Please contact your card issuer' });
+      const { isBlocked } = creditCard.isBlocked();
+
+      if (isBlocked) {
+        return res.status(200).send({
+          error: `Card is blocked. Please contact your card issuer`,
+        });
       }
 
-      const { isValid, hasDroppedFailureScore } = creditCard.isPinValid(pin);
-      let hasChangedScore = false;
+      const isPinValid = creditCard.isPinValid(pin);
+      const { isValid } = isPinValid;
+      let { hasChangedScore } = isPinValid;
 
       if (isValid) {
         const { accountNo } = creditCard;
-        jwt.sign(
-          { accountNo },
-          'secret',
-          { expiresIn: '15m' },
-          (err, token) => {
-            if (!err && token) {
-              res.status(200).send({ token: token });
-            } else {
-              res
-                .status(500)
-                .send({ error: 'An error occured. Try again later' });
-            }
+        jwt.sign({ accountNo }, 'secret', { expiresIn: '15m' }, (err, token) => {
+          if (!err && token) {
+            res.status(200).send({ token: token });
+          } else {
+            res.status(500).send({ error: 'An error occured. Try again later' });
           }
-        );
+        });
       } else {
         const hasBeenBlocked = creditCard.handleFailure();
         if (hasBeenBlocked) {
           res.status(200).send({
-            error:
-              'Your card has been blocked. Please contact your card issuer',
+            error: 'Your card has been blocked. Please contact your card issuer',
           });
         } else {
           res.status(200).send({ error: 'Wrong PIN' });
         }
         hasChangedScore = true;
       }
-      if (hasChangedScore || hasDroppedFailureScore) {
+      if (hasChangedScore) {
         patchCreditCard(creditCard);
       }
     });
@@ -69,14 +64,6 @@ const patchCreditCard = (creditCard) => {
     .patch(creditCard)
     .then(() => {});
 };
-
-const debug = (req, res) => {
-  CreditCard.query().then((data) => {
-    res.status(200).send(data);
-  });
-};
-
-router.get('/debug', debug);
 
 router.post('/verifycard', verifyCard);
 

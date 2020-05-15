@@ -11,6 +11,7 @@ exports.up = function (knex) {
     t.text('card_type', 20).notNullable();
     t.specificType('failure_score', 'smallint').defaultTo(0);
     t.boolean('is_blocked').defaultTo(false);
+    t.date('blocked_date');
   });
 };
 
