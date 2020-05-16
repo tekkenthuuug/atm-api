@@ -3,8 +3,8 @@ exports.up = function (knex) {
     t.increments('cardID').primary();
     t.bigInteger('cardNo').notNullable().unique();
     t.date('expired_date').notNullable().defaultTo(knex.fn.now());
-    t.text('accountNo', 30).notNullable().references('bank_accounts.accountNo');
-    t.bigInteger('customerID').notNullable().references('customers.customerID');
+    t.text('accountNo', 30).notNullable().references('bank_accounts.accountNo').onDelete('CASCADE');
+    t.bigInteger('customerID').notNullable().references('customers.customerID').onDelete('CASCADE');
     t.integer('CVV').notNullable();
     t.text('card_holder', 100).notNullable();
     t.text('hash_pin', 60).notNullable();
@@ -16,5 +16,5 @@ exports.up = function (knex) {
 };
 
 exports.down = function (knex) {
-  return knex.schema.dropTable('credit_cards');
+  return knex.schema.dropTableIfExists('credit_cards');
 };

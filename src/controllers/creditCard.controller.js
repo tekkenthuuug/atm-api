@@ -52,6 +52,7 @@ const verifyCard = (req, res) => {
         }
         hasChangedScore = true;
       }
+
       if (hasChangedScore) {
         patchCreditCard(creditCard);
       }
