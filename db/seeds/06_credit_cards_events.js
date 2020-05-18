@@ -6,7 +6,7 @@ exports.seed = function (knex) {
       // Inserts seed entries
       return knex('credit_cards_events').insert([
         {
-          cardID: 1,
+          cardNo: 1234567890123456,
           event_name: 'Authorized',
           event_date: new Date(),
         },

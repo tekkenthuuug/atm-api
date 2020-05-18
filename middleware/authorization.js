@@ -10,15 +10,15 @@ const requireAuth = (req, res, next) => {
     return res.status(401).json('Unauthorized');
   }
   jwt.verify(token, 'secret', {}, (err, decoded) => {
-    if (err || !decoded.accountNo) {
+    if (err || !decoded.accountNo || !decoded.cardNo) {
       return res.status(401).send('Unauthorized');
     }
-    const { accountNo, exp } = decoded;
+    const { accountNo, cardNo, exp } = decoded;
     const currentTime = Date.now().valueOf() / 1000;
     if (exp < currentTime) {
       return res.status(401).send('Unauthorized');
     }
-    res.locals.accountNo = accountNo;
+    res.locals = { ...res.locals, accountNo, cardNo };
     next();
   });
 };
