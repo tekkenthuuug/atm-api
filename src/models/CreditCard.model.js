@@ -21,6 +21,8 @@ class CreditCard extends Model {
       hasChangedScore = true;
     }
 
+    this.insertCreditCardEvent('Authorized');
+
     return { isValid, hasChangedScore };
   }
 

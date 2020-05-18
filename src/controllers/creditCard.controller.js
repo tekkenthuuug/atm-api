@@ -61,6 +61,7 @@ const getHistory = (req, res) => {
   const { cardNo } = res.locals;
   CreditCardEvents.query()
     .where({ cardNo })
+    .orderBy('eventID', 'DESC')
     .then((data) => {
       res.status(200).send(data);
     });
