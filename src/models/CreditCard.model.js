@@ -16,12 +16,13 @@ class CreditCard extends Model {
     const isValid = bcrypt.compareSync(pin, this.hash_pin);
     let hasChangedScore = false;
 
-    if (isValid && this.failure_score !== 0) {
-      this.failure_score = 0;
-      hasChangedScore = true;
+    if (isValid) {
+      this.insertCreditCardEvent('Authorized');
+      if (this.failure_score !== 0) {
+        this.failure_score = 0;
+        hasChangedScore = true;
+      }
     }
-
-    this.insertCreditCardEvent('Authorized');
 
     return { isValid, hasChangedScore };
   }

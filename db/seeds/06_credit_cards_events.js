@@ -8,7 +8,7 @@ exports.seed = function (knex) {
         {
           cardNo: 1234567890123456,
           event_name: 'Authorized',
-          event_date: new Date(),
+          event_date: new Date(2020, 2, 15, 12, 45, 50, 10),
         },
       ]);
     });
