@@ -9,20 +9,7 @@ class CreditCard extends Model {
     return 'credit_cards';
   }
 
-  static get relationMappings() {
-    const BankAccount = require('./BankAccount.model');
-
-    return {
-      accounts: {
-        relation: Model.HasOneRelation,
-        modelClass: BankAccount,
-        join: {
-          from: 'credit_cards.accountNo',
-          to: 'bank_accounts.accountNo',
-        },
-      },
-    };
-  }
+  static get relationMappings() {}
 
   isPinValid(pin) {
     const isValid = bcrypt.compareSync(pin, this.hash_pin);
