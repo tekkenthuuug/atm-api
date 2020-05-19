@@ -65,7 +65,7 @@ const depositMoney = (req, res) => {
         res.status(400).send({ error: 'Account not found' });
       }
       account.depositMoney(amount);
-      patchBalance(account)
+      patchBalance(account, account.balance - amount)
         .then(() => {
           res.status(200).send({ balance: account.balance });
         })
