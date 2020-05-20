@@ -6,4 +6,4 @@ COPY ./ ./
 
 RUN yarn install
 
-CMD ["/bin/bash"]
+CMD node index.js --bind 0.0.0.0
