@@ -5,13 +5,11 @@ const user = process.env.POSTGRES_USER;
 const password = process.env.POSTGRES_PASSWORD;
 const host = process.env.POSTGRES_HOST;
 
-const connection = `postgres://${user}:${password}@${host}:5432/${database}`
-
 module.exports = {
 
   development: {
     client: 'pg',
-    connection,
+    connection: `postgres://${user}:${password}@${host}:5432/${database}`,
     migrations: {
       directory: __dirname + '/db/migrations'
     },
@@ -22,7 +20,7 @@ module.exports = {
 
   production: {
     client: 'pg',
-    connection,
+    connection: process.env.DATABASE_URL,
     migrations: {
       directory: __dirname + '/db/migrations'
     },

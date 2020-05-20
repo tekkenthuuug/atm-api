@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const CreditCard = require('../models/CreditCard.model');
 const CreditCardEvents = require('../models/CreditCardEvent.model');
-const requireAuth = require('../../middleware/authorization');
+const requireAuth = require('../middleware/authorization');
 const router = require('express').Router();
 
 const verifyCard = async (req, res) => {
@@ -73,7 +73,7 @@ const patchCreditCard = (creditCard) => {
   return CreditCard.query()
     .where({ cardID: creditCard.cardID })
     .patch(creditCard)
-    .then(() => {});
+    .then(() => { });
 };
 
 module.exports = router;

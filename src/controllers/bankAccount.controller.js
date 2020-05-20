@@ -1,4 +1,4 @@
-const requireAuth = require('../../middleware/authorization');
+const requireAuth = require('../middleware/authorization');
 const BankAccount = require('../models/BankAccount.model');
 const Transaction = require('../models/Transaction.model');
 const router = require('express').Router();
