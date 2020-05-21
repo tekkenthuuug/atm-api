@@ -9,9 +9,7 @@ const checkBalance = (req, res) => {
     by authentification middleware
   */
   const { accountNo } = res.locals;
-  if (!accountNo) {
-    res.satus(400).send({ error: 'accountNo is missing' });
-  }
+
   BankAccount.query()
     .where({ accountNo })
     .first()

@@ -4,7 +4,7 @@ exports.up = function (knex) {
     t.bigInteger('cardNo').notNullable().unique();
     t.date('expired_date').notNullable().defaultTo(knex.fn.now());
     t.bigInteger('accountNo').notNullable().references('bank_accounts.accountNo').onDelete('CASCADE');
-    t.bigInteger('customerID').notNullable().references('customers.customerID').onDelete('CASCADE');
+    t.integer('customerID').notNullable().references('customers.customerID').onDelete('CASCADE');
     t.specificType('CVV', 'smallint').notNullable();
     t.text('card_holder', 100).notNullable();
     t.text('hash_pin', 60).notNullable();
